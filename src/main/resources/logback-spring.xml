@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="DEBUG"/>
+
+    <springProfile name="prod">
+        <appender name="siteAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/root/log/site.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>/root/log/site-%d{yyyy-MM-dd}.log</fileNamePattern>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/root/log/error.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>/root/log/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <logger name="info.epochpro.service.SiteServiceImpl" level="INFO" >
+            <appender-ref ref="siteAppender"/>
+        </logger>
+        <root level="ERROR">
+            <appender-ref ref="errorAppender"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <appender name="siteAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/Users/wq/Documents/projectLogs/rank_site_log/site.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>/Users/wq/Documents/projectLogs/rank_site_log/site-%d{yyyy-MM-dd}.log</fileNamePattern>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/Users/wq/Documents/projectLogs/rank_site_log/error.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>/Users/wq/Documents/projectLogs/rank_site_log/error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <logger name="info.epochpro.service.SiteServiceImpl" level="INFO" >
+            <appender-ref ref="siteAppender"/>
+        </logger>
+        <root level="ERROR">
+            <appender-ref ref="errorAppender"/>
+        </root>
+    </springProfile>
+
+</configuration>
