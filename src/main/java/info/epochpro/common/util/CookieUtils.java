@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import static info.epochpro.common.Checker.notNull;
 
 /**
+ * cookie工具类
  * Created by jin on 2017/1/17.
  */
 public class CookieUtils {

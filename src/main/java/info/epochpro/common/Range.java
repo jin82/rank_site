@@ -18,7 +18,7 @@ public class Range {
 
     public Range(Long defaultValue,Long range) {
         if(defaultValue<range){
-            throw new ServiceException();
+            throw new ServiceException("获取范围参数有误");
         }
         this.defaultValue = defaultValue;
         this.range = range;

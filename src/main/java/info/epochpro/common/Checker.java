@@ -1,17 +1,18 @@
 package info.epochpro.common;
 
-import info.epochpro.exceptions.SystemException;
+import info.epochpro.exceptions.ServiceException;
 
 import java.text.MessageFormat;
 
 /**
+ * 数据检查类
  * Created by jin on 2017/1/17.
  */
 public class Checker {
 
     public static <T> T notNull(T o,String errorMsg) {
         if (o == null) {
-            throw new SystemException(errorMsg);
+            throw new ServiceException(errorMsg);
         }
         return o;
     }

@@ -1,16 +1,21 @@
 package info.epochpro.service;
 
-import info.epochpro.common.SessionContext;
+import info.epochpro.common.Constant;
+import info.epochpro.common.enums.ErrorEnum;
+import info.epochpro.common.helper.JwtHelper;
+import info.epochpro.common.util.UUIDGenerator;
+import info.epochpro.exceptions.ServiceException;
+import info.epochpro.model.Token;
 import info.epochpro.model.User;
 import info.epochpro.repository.UserRepository;
 import info.epochpro.service.inter.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+
+import static info.epochpro.common.Checker.notNull;
 
 /**
  * Created by jin on 2016/12/11.
@@ -21,38 +26,60 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${epochpro.vister.key}")
+    private String key;
+
     @Override
     public User insertUser(User user){
-        Date now = new Date();
+        if (selectUserByName(user.getName()) != null) {
+            throw new ServiceException(ErrorEnum.USERNAME_USED);
+        }
+        Date now = new Date(System.currentTimeMillis());
         user.setRegDate(now);
         return userRepository.save(user);
     }
 
     @Override
-    public User selectUserById(Long id) {
+    public User selectUserById(String id) {
         return userRepository.findOne(id);
     }
 
     @Override
     public User selectUserByName(String name) {
-        return userRepository.findByName(name);
+        User user = userRepository.findByName(name);
+        if (user == null) {
+            throw new ServiceException(ErrorEnum.USER_NOT_FOUND);
+        }
+        return user;
     }
 
     @Override
-    public String selectLoginuser(HttpServletRequest request, HttpServletResponse response,User user) {
-        Assert.notNull(user.getName(),"登陆用户名不能为空");
-        Assert.notNull(user.getPassword(),"登陆密码不能为空");
+    public User selectLoginuser(User user) {
+        notNull(user.getName(),"登陆用户名不能为空");
+        notNull(user.getPassword(),"登陆密码不能为空");
 
         User sameNameUser = userRepository.findByName(user.getName());
         if (sameNameUser == null) {
-            return "没有这个用户";
+            throw new ServiceException(ErrorEnum.USER_NOT_FOUND);
         }else{
             if (!user.getPassword().equals(sameNameUser.getPassword())) {
-                return "用户名或密码错误";
-
+                throw new ServiceException(ErrorEnum.AUTH_ERROR);
             }
         }
-        SessionContext.setCurrentUser(request,response,sameNameUser);
-        return "登陆成功";
+        return sameNameUser;
+    }
+
+    @Override
+    public Token token(User user) {
+        User u = selectLoginuser(user);
+        String secret = UUIDGenerator.uuid();
+        u.setSecret(secret);
+        userRepository.save(u);
+        String tokenStr = JwtHelper.createJWT(u, Constant.TOKEN_EXPIRES, key);
+        Token token = new Token();
+        token.setToken(tokenStr);
+        token.setExpires(Constant.TOKEN_EXPIRES);
+        token.setType("bearer");
+        return token;
     }
 }

@@ -6,6 +6,7 @@ import static info.epochpro.common.Checker.notNull;
 
 
 /**
+ * bean 帮助类
  * Created by jin on 2017/1/17.
  */
 public class SpringBeanHelper {
@@ -24,6 +25,7 @@ public class SpringBeanHelper {
         return notNull(bean, BEAN_NOT_FOUND, t.getName());
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         Object bean = applicationContext.getBean(name);
         return (T) notNull(bean, BEAN_NOT_FOUND, name);
