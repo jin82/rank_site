@@ -7,7 +7,7 @@
         <appender name="siteAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>/root/log/site.log</file>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>/root/log/site-%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>/site/site-log/site-%d{yyyy-MM-dd}.log</fileNamePattern>
             </rollingPolicy>
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>

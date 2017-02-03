@@ -47,9 +47,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User selectUserByName(String name) {
         User user = userRepository.findByName(name);
-        if (user == null) {
-            throw new ServiceException(ErrorEnum.USER_NOT_FOUND);
-        }
         return user;
     }
 
