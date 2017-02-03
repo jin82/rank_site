@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delUser(String id) {
+        userRepository.delete(id);
+    }
+
+    @Override
     public User selectLoginuser(User user) {
         notNull(user.getName(),"登陆用户名不能为空");
         notNull(user.getPassword(),"登陆密码不能为空");

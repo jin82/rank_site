@@ -25,6 +25,13 @@ public class UserServiceImplTest {
 
     @Test
     public void crudUser() throws Exception {
+        User user = insert();
+        selectById(user.getUuid());
+        selectByName(user.getName());
+        del(user.getUuid());
+    }
+
+    private User insert() {
         String password = EncryptUtils.getMD5("123456");
 
         User user = new User();
@@ -33,26 +40,28 @@ public class UserServiceImplTest {
         user.setPassword(password);
         user = userService.insertUser(user);
         assertNotNull("测试新增用户出错", user.getUuid());
+        return user;
+    }
 
-
-        User dbUser = userService.selectUserById(user.getUuid());
+    public User selectById(String uuid) {
+        User dbUser = userService.selectUserById(uuid);
         assertNotNull("通过ID查询用户出错", dbUser);
+        return dbUser;
+    }
 
-        User dbUserName = userService.selectUserByName(user.getName());
+    public User selectByName(String name) {
+        User dbUserName = userService.selectUserByName(name);
         assertNotNull("通过用户名查询用户出错", dbUserName);
+        return dbUserName;
+    }
 
-
+    public void del(String uuid) {
+        userService.delUser(uuid);
     }
 
     @Test
     public void token() {
-        String password = EncryptUtils.getMD5("123456");
-
-
-        User user = new User();
-        user.setName("king");
-        user.setPassword(password);
-
+        User user = insert();
         Token token = userService.token(user);
         assertNotNull("token 获取失败", token);
         System.out.println(token);

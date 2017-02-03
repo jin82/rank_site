@@ -13,6 +13,8 @@ public interface UserService {
 
     User selectUserByName(String name);
 
+    void delUser(String id);
+
     User selectLoginuser(User user);
 
     Token token(User user);
